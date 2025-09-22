@@ -1,6 +1,13 @@
 # ============================================
 # 📌 Streamlit NLP Phase-wise with All Models
 # ============================================
+import nltk
+
+# Download required NLTK resources at runtime
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('omw-1.4')  # for WordNet lemmatizer
 
 import streamlit as st
 import pandas as pd
