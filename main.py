@@ -3,12 +3,12 @@
 # ============================================
 import nltk
 
-# Download required NLTK resources at runtime
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('wordnet')
-nltk.download('omw-1.4')  # for WordNet lemmatizer
-
+# Download required NLTK resources for Streamlit Cloud
+nltk.download('punkt', quiet=True)       # sentence tokenizer
+nltk.download('stopwords', quiet=True)   # for stopword removal
+nltk.download('wordnet', quiet=True)     # for lemmatizer
+nltk.download('omw-1.4', quiet=True)     # for WordNet data
+s
 import streamlit as st
 import pandas as pd
 import numpy as np
