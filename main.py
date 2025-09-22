@@ -40,12 +40,27 @@ stop_words = set(stopwords.words('english'))
 # Phase Feature Extractors
 # ============================
 def lexical_preprocess(text):
+    import nltk
+    nltk.download('punkt', quiet=True)
+    nltk.download('stopwords', quiet=True)
+    nltk.download('wordnet', quiet=True)
+    nltk.download('omw-1.4', quiet=True)
+
     if not isinstance(text, str) or text.strip() == "":
         return ""
-    tokens = nltk.word_tokenize(text.lower())
+    
+    from nltk.corpus import stopwords
+    from nltk.stem import WordNetLemmatizer
+    from nltk.tokenize import word_tokenize
+
+    stop_words = set(stopwords.words('english'))
+    lemmatizer = WordNetLemmatizer()
+
+    tokens = word_tokenize(text.lower())
     tokens = [lemmatizer.lemmatize(w) for w in tokens 
-              if w not in stop_words and w not in string.punctuation]
+              if w not in stop_words and w.isalpha()]
     return " ".join(tokens)
+
 
 
 def syntactic_features(text):
@@ -58,9 +73,14 @@ def semantic_features(text):
     return [blob.sentiment.polarity, blob.sentiment.subjectivity]
 
 def discourse_features(text):
+    import nltk
+    nltk.download('punkt', quiet=True)
+
     if not isinstance(text, str) or text.strip() == "":
         return ""
-    sentences = nltk.sent_tokenize(text)
+    
+    from nltk.tokenize import sent_tokenize
+    sentences = sent_tokenize(text)
     return f"{len(sentences)} {' '.join([s.split()[0] for s in sentences if len(s.split())>0])}"
 
 
