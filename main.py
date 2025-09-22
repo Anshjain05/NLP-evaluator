@@ -2,6 +2,17 @@
 # 📌 Streamlit NLP Phase-wise with All Models
 # ============================================
 
+import nltk
+import streamlit as st
+
+# Download NLTK data only once
+@st.cache_data(show_spinner=False)
+def download_nltk_resources():
+    resources = ['punkt', 'stopwords', 'wordnet', 'omw-1.4']
+    for r in resources:
+        nltk.download(r, quiet=True)
+
+download_nltk_resources()
 
 import streamlit as st
 import pandas as pd
@@ -20,13 +31,6 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 
 import matplotlib.pyplot as plt
-import nltk
-
-# Download required NLTK resources for Streamlit Cloud
-nltk.download('punkt', quiet=True)       # sentence tokenizer
-nltk.download('stopwords', quiet=True)   # for stopword removal
-nltk.download('wordnet', quiet=True)     # for lemmatizer
-nltk.download('omw-1.4', quiet=True)     # for WordNet data
 # Load Spacy
 nlp = spacy.load("en_core_web_sm")
 lemmatizer = WordNetLemmatizer()
