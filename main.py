@@ -36,9 +36,13 @@ stop_words = set(stopwords.words('english'))
 # Phase Feature Extractors
 # ============================
 def lexical_preprocess(text):
+    if not isinstance(text, str) or text.strip() == "":
+        return ""
     tokens = nltk.word_tokenize(text.lower())
-    tokens = [lemmatizer.lemmatize(w) for w in tokens if w not in stop_words and w not in string.punctuation]
+    tokens = [lemmatizer.lemmatize(w) for w in tokens 
+              if w not in stop_words and w not in string.punctuation]
     return " ".join(tokens)
+
 
 def syntactic_features(text):
     doc = nlp(text)
@@ -50,8 +54,11 @@ def semantic_features(text):
     return [blob.sentiment.polarity, blob.sentiment.subjectivity]
 
 def discourse_features(text):
+    if not isinstance(text, str) or text.strip() == "":
+        return ""
     sentences = nltk.sent_tokenize(text)
     return f"{len(sentences)} {' '.join([s.split()[0] for s in sentences if len(s.split())>0])}"
+
 
 pragmatic_words = ["must", "should", "might", "could", "will", "?", "!"]
 def pragmatic_features(text):
@@ -106,7 +113,7 @@ if uploaded_file:
     ])
 
     if st.button("Run Comparison"):
-        X = df[text_col].astype(str)
+        X = df[text_col].fillna("").astype(str)
         y = df[target_col]
 
         if phase == "Lexical & Morphological":
