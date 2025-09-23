@@ -2,24 +2,10 @@
 # 📌 Streamlit NLP Phase-wise with All Models
 # ============================================
 
-import nltk
-import streamlit as st
-
-# Download NLTK data only once
-@st.cache_data(show_spinner=False)
-def download_nltk_resources():
-    resources = ['punkt', 'stopwords', 'wordnet', 'omw-1.4']
-    for r in resources:
-        nltk.download(r, quiet=True)
-
-download_nltk_resources()
-
 import streamlit as st
 import pandas as pd
-import numpy as np
-import nltk, string, spacy
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
+import spacy
+from spacy.lang.en.stop_words import STOP_WORDS
 from textblob import TextBlob
 
 from sklearn.model_selection import train_test_split
@@ -31,62 +17,44 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 
 import matplotlib.pyplot as plt
-# Load Spacy
+
+# ============================
+# Load SpaCy & Globals
+# ============================
 nlp = spacy.load("en_core_web_sm")
-lemmatizer = WordNetLemmatizer()
-stop_words = set(stopwords.words('english'))
+stop_words = STOP_WORDS
 
 # ============================
 # Phase Feature Extractors
 # ============================
 def lexical_preprocess(text):
-    import nltk
-    nltk.download('punkt', quiet=True)
-    nltk.download('stopwords', quiet=True)
-    nltk.download('wordnet', quiet=True)
-    nltk.download('omw-1.4', quiet=True)
-
-    if not isinstance(text, str) or text.strip() == "":
-        return ""
-    
-    from nltk.corpus import stopwords
-    from nltk.stem import WordNetLemmatizer
-    from nltk.tokenize import word_tokenize
-
-    stop_words = set(stopwords.words('english'))
-    lemmatizer = WordNetLemmatizer()
-
-    tokens = word_tokenize(text.lower())
-    tokens = [lemmatizer.lemmatize(w) for w in tokens 
-              if w not in stop_words and w.isalpha()]
+    """Tokenization + Stopwords removal + Lemmatization"""
+    doc = nlp(text.lower())
+    tokens = [token.lemma_ for token in doc if token.text not in stop_words and token.is_alpha]
     return " ".join(tokens)
 
-
-
 def syntactic_features(text):
+    """Part-of-Speech tags"""
     doc = nlp(text)
     pos_tags = " ".join([token.pos_ for token in doc])
     return pos_tags
 
 def semantic_features(text):
+    """Sentiment polarity & subjectivity"""
     blob = TextBlob(text)
     return [blob.sentiment.polarity, blob.sentiment.subjectivity]
 
 def discourse_features(text):
-    import nltk
-    nltk.download('punkt', quiet=True)
-
-    if not isinstance(text, str) or text.strip() == "":
-        return ""
-    
-    from nltk.tokenize import sent_tokenize
-    sentences = sent_tokenize(text)
-    return f"{len(sentences)} {' '.join([s.split()[0] for s in sentences if len(s.split())>0])}"
-
+    """Sentence count + first word of each sentence"""
+    doc = nlp(text)
+    sentences = [sent.text.strip() for sent in doc.sents]
+    return f"{len(sentences)} {' '.join([s.split()[0] for s in sentences if len(s.split()) > 0])}"
 
 pragmatic_words = ["must", "should", "might", "could", "will", "?", "!"]
 def pragmatic_features(text):
-    return [text.lower().count(w) for w in pragmatic_words]
+    """Counts of modality & special words"""
+    text = text.lower()
+    return [text.count(w) for w in pragmatic_words]
 
 # ============================
 # Train & Evaluate All Models
@@ -108,8 +76,8 @@ def evaluate_models(X_features, y):
         try:
             model.fit(X_train, y_train)
             y_pred = model.predict(X_test)
-            acc = accuracy_score(y_test, y_pred) * 100   # percentage
-            results[name] = f"{round(acc, 2)}%"           # round and add %
+            acc = accuracy_score(y_test, y_pred) * 100
+            results[name] = f"{round(acc, 2)}%"
         except Exception as e:
             results[name] = f"Error: {str(e)}"
 
@@ -137,7 +105,7 @@ if uploaded_file:
     ])
 
     if st.button("Run Comparison"):
-        X = df[text_col].fillna("").astype(str)
+        X = df[text_col].astype(str)
         y = df[target_col]
 
         if phase == "Lexical & Morphological":
@@ -163,30 +131,24 @@ if uploaded_file:
         # Run all models
         results = evaluate_models(X_features, y)
 
-        # Show results table
-        # Convert results dict to DataFrame
+        # Convert results to DataFrame
         results_df = pd.DataFrame(list(results.items()), columns=["Model", "Accuracy"])
-
-        # Strip '%' and convert to float for sorting
         results_df["Accuracy_float"] = results_df["Accuracy"].str.rstrip('%').astype(float)
-
-        # Sort descending
         results_df = results_df.sort_values(by="Accuracy_float", ascending=False).reset_index(drop=True)
 
-        # Display table
-        results_df_display = results_df[["Model", "Accuracy"]]
+        # Display results
         st.subheader("✅ Model Comparison Results (Descending Accuracy)")
-        st.dataframe(results_df_display)
+        st.dataframe(results_df[["Model", "Accuracy"]])
 
         # Bar chart
         acc_values = results_df["Accuracy_float"]
-        plt.figure(figsize=(6,4))
+        plt.figure(figsize=(6, 4))
         plt.bar(results_df["Model"], acc_values, alpha=0.7)
         plt.ylabel("Accuracy (%)")
         plt.title(f"Model Performance on {phase}")
         plt.xticks(rotation=30)
 
-        # Add percentage labels on top of bars
+        # Add percentage labels
         for i, v in enumerate(acc_values):
             plt.text(i, v + 1, f"{v:.0f}%", ha='center')
 
