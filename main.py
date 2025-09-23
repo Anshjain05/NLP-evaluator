@@ -86,7 +86,7 @@ def evaluate_models(X_features, y):
 # ============================
 # Streamlit UI
 # ============================
-st.title("📊 Phase-wise NLP Analysis with Model Comparison")
+st.title("Phase-wise NLP Analysis with Model Comparison")
 
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 if uploaded_file:
@@ -137,7 +137,7 @@ if uploaded_file:
         results_df = results_df.sort_values(by="Accuracy_float", ascending=False).reset_index(drop=True)
 
         # Display results
-        st.subheader("✅ Model Comparison Results (Descending Accuracy)")
+        st.subheader("Model Comparison Results")
         st.dataframe(results_df[["Model", "Accuracy"]])
 
         # Bar chart
