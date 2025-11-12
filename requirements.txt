@@ -13,7 +13,8 @@ ftfy==6.2.3
 # Natural Language Processing
 # ---------------------------
 spacy==3.8.2
-thinc==8.2.2
+thinc>=8.3.0,<8.4.0
+
 textblob==0.18.0.post0
 
 # English model for SpaCy
