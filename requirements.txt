@@ -1,9 +1,44 @@
-streamlit==1.49.1
-pandas==2.3.2
-numpy==2.3.3
-matplotlib==3.10.6
-nltk==3.9.1
-textblob==0.19.0
-spacy==3.8.7
-scikit-learn==1.7.2
-en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl#sha256=1932429db727d4bff3deed6b34cfc05df17794f4a52eeb26cf8928f7c1a0fb85
+# ---------------------------
+# Core framework
+# ---------------------------
+streamlit==1.39.0
+pandas==2.2.3
+numpy==1.26.4
+matplotlib==3.9.2
+requests==2.32.3
+beautifulsoup4==4.12.3
+ftfy==6.2.3
+
+# ---------------------------
+# Natural Language Processing
+# ---------------------------
+spacy==3.8.2
+thinc==8.2.2
+textblob==0.18.0.post0
+
+# English model for SpaCy
+# (if deploying on Streamlit Cloud, include the direct URL below)
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
+
+# ---------------------------
+# Machine Learning
+# ---------------------------
+scikit-learn==1.5.2
+imbalanced-learn==0.12.3
+
+# ---------------------------
+# Utility and visualization
+# ---------------------------
+tqdm==4.66.5
+regex==2024.9.11
+
+# ---------------------------
+# Compatibility fixes
+# ---------------------------
+h5py==3.10.0
+confection==0.1.5
+srsly==2.4.8
+catalogue==2.0.10
+preshed==3.0.9
+blis==0.7.11
+wasabi==1.1.3
