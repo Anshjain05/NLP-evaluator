@@ -1,29 +1,29 @@
 # ========== Core Framework ==========
-streamlit==1.39.0
-pandas==2.2.3
-numpy==1.26.4
-matplotlib==3.9.2
-requests==2.32.3
-beautifulsoup4==4.12.3
-ftfy==6.2.3
+streamlit
+pandas
+numpy
+matplotlib
+requests
+beautifulsoup4
+ftfy
 
 # ========== NLP Libraries ==========
-spacy==3.8.2
-thinc>=8.3.0,<8.4.0
-blis>=1.0.0,<1.4.0
-textblob==0.18.0.post0
+spacy
+thinc
+blis
+textblob
 # Precompiled SpaCy English model (no build time)
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
 
 # ========== Machine Learning ==========
-scikit-learn==1.5.2
-imbalanced-learn==0.12.3
+scikit-learn
+imbalanced-learn
 
 # ========== Utilities ==========
-tqdm==4.66.5
-regex==2024.9.11
-#h5py==3.10.0
-h5py==3.12.1
+tqdm
+regex
+#h5py
+h5py
 
 confection==0.1.5
 srsly==2.4.8
