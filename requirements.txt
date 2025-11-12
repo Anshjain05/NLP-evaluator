@@ -22,7 +22,9 @@ imbalanced-learn==0.12.3
 # ========== Utilities ==========
 tqdm==4.66.5
 regex==2024.9.11
-h5py==3.10.0
+#h5py==3.10.0
+h5py==3.12.1
+
 confection==0.1.5
 srsly==2.4.8
 catalogue==2.0.10
